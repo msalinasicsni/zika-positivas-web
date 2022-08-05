@@ -1,7 +1,8 @@
 package ni.org.ics.zikapositivas.service;
 
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import com.mysql.cj.jdbc.MysqlDataSource;
 import ni.org.ics.zikapositivas.domain.audit.AuditTrail;
+import ni.org.ics.zikapositivas.utils.ConnectionUtil;
 import ni.org.ics.zikapositivas.utils.DateUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,19 +24,8 @@ public class EditarDatosService {
     @Resource(name = "auditTrailService")
     private AuditTrailService auditTrailService;
 
-    private static Connection getConnection() throws Exception{
-        MysqlDataSource dataSource = new MysqlDataSource();
-        dataSource.setUser("zikapos");
-        dataSource.setPassword("jeKAQudi");
-        dataSource.setServerName("localhost");
-        dataSource.setPort(3306);
-        dataSource.setDatabaseName("zika_positivas");
-
-        return dataSource.getConnection();
-    }
-
     public List<String> getTableMetaData(String tableName) throws Exception{
-        Connection con = getConnection();
+        Connection con = ConnectionUtil.getConnection();
         List<String> columns = new ArrayList<String>();
         try {
             DatabaseMetaData meta = con.getMetaData();
@@ -106,7 +96,7 @@ public class EditarDatosService {
      * @throws Exception
      */
     public int updateProperty(String tabla, String evento, String id, String propiedad, String valor, boolean setNull, String actorId) throws Exception {
-        Connection connection = getConnection();
+        Connection connection = ConnectionUtil.getConnection();
         int registros = 0;
         int resultado = 0;
         StringBuilder sbUpdate = null;
